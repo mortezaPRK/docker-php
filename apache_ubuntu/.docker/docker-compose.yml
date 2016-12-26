@@ -1,0 +1,62 @@
+version: '2'
+services:
+  web:
+    # Apache & php WebServer.
+    build:
+      context: ./Dockerfiles
+      args:
+        # PHP version. ONLY use '5.6' or '7.0' or '7.1'
+        - VERSION=7.1
+      dockerfile: docker.sample
+    # Change image directive based on your needs
+    image: amp:sample
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    # connection to databases. Postgresql and Mysql are available. anything else should work
+    links:
+      - mysql
+      - psql
+    volumes:
+      # App Code. Same as PHP Container
+      - ../:/code
+      # Apache main Conf
+      - ./server.conf:/etc/apache2/sites-available/000-default.conf
+      # PHP main Conf
+      - ./php.ini:/etc/php_config/apache2/conf.d/01-custom.ini
+      # Persistent Log of Apache Server
+      - ./LOG/apache2/:/var/log/apache2/
+  psql:
+    # Postgresql Container.
+    image: postgres:latest
+    volumes:
+      # Persistent Data Volume
+      - ./DB/postgresql:/var/lib/postgresql/data
+    ports:
+      # To access database from HOST
+      - "5432:5432"
+    environment:
+      # Auth Information
+      - POSTGRES_PASSWORD=SomeText
+      - POSTGRES_USER=SomeText
+      - POSTGRES_DB=SomeText
+      # Data path. Good practice in case of multiple database instance
+      - PGDATA=/var/lib/postgresql/data/projectName
+  mysql:
+    # MySql Container.
+    image: mysql:latest
+    volumes:
+      # Persistent Data Volume
+      - ./DB/mysql/projectname:/var/lib/mysql
+      # Custom CNF file. remove if you don't have any cutomization
+      - ./mysql.cnf:/etc/mysql/conf.d/01-custom.cnf
+    ports:
+      # To access database from HOST
+      - "3306:3306"
+    environment:
+      # Auth Information
+      - MYSQL_ROOT_PASSWORD=SomeText
+      - MYSQL_DATABASE=SomeText
+      - MYSQL_USER=SomeText
+      - MYSQL_PASSWORD=SomeText

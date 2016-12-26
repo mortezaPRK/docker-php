@@ -1,0 +1,46 @@
+FROM ubuntu:16.04
+
+MAINTAINER MortzPRK
+
+# Argument from docker-compose.yml to determine php version (5.6 or 7.0 or 7.1)
+ARG VERSION
+
+# Update and Install APACHE, PHP and PHP extensions.
+# PHP and extensions installed from PPA:ondrej/php
+# Be aware that some php extensions may NOT be available in all versions!
+RUN echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" > /etc/apt/sources.list.d/php.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -yq install \
+        curl \
+        apache2 \
+        libapache2-mod-php$VERSION \
+        php$VERSION-mysql \
+        php$VERSION-mcrypt \
+        php$VERSION-gd \
+        php$VERSION-curl \
+        php-pear \
+        php$VERSION-imagick \
+        php$VERSION-pgsql \
+        php$VERSION-json \
+        php$VERSION-cli \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+# Enable mcrypt extension
+RUN /usr/sbin/phpenmod mcrypt
+
+# Allow .htaccess file to get parsed by apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf && a2enmod rewrite
+
+# Configure /app folder with sample app 
+RUN mkdir -p /code
+
+# Configure /etc/php/PHPVERSION to /etc/php_config
+RUN ln -s /etc/php/$VERSION /etc/php_config
+
+# Expose Webserver ports
+EXPOSE 80 443
+
+# Run Webserver
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

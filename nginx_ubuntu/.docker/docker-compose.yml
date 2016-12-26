@@ -1,0 +1,65 @@
+version: '2'
+services:
+  web:
+    # Nginx WebServer. links to PHP Container.
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - php
+    restart: always
+    volumes:
+      # App Code. Same as PHP Container
+      - ../:/code
+      # Nginx main Conf.
+      - ./server.conf:/etc/nginx/conf.d/default.conf
+      # Persistent Log of Nginx Server
+      - ./LOG/nginx:/var/log/nginx
+  php:
+    # PHP Container. links to Database Containers.
+    build:
+      context: ./Dockerfiles
+      dockerfile: docker.sample
+    # Change image directive based on your needs
+    image: amp:sample
+    links:
+      # connection to databases. Postgresql and Mysql are available. anything else should work
+      - psql
+      - mysql
+    volumes:
+      # App Code. Same as Nginx Container
+      - ../:/code
+      # PHP config file
+      - ./php.ini:/usr/local/etc/php/conf.d/01-custom.ini
+      # Persistent Log of PHP-FPM
+      - ./LOG/nginx:/var/log/nginx
+  psql:
+    # Postgresql Container.
+    image: postgres:latest
+    volumes:
+      # Persistent Data Volume
+      - ./DB/postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      # Auth Information
+      - POSTGRES_PASSWORD=SomeText
+      - POSTGRES_USER=SomeText
+      - POSTGRES_DB=SomeText
+      # Data path. Good practice in case of multiple database instance
+      - PGDATA=/var/lib/postgresql/data/projectName
+  mysql:
+    # MySql Container.
+    image: mysql:latest
+    volumes:
+      # Persistent Data Volume
+      - ./DB/mysql/rayvista:/var/lib/mysql
+      # Custom CNF file. remove if you don't have any cutomization
+      - ./mysql.cnf:/etc/mysql/conf.d/01-custom.cnf
+    environment:
+      # Auth Information
+      - MYSQL_ROOT_PASSWORD=SomeText
+      - MYSQL_DATABASE=SomeText
+      - MYSQL_USER=SomeText
+      - MYSQL_PASSWORD=SomeText
