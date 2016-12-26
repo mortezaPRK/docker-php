@@ -8,6 +8,7 @@ Using offical images from [Docker](https://www.docker.com)
 There are two type off servers. You can choose based on your needs.
 
 **apache_ubuntu**: Web server is Apache. base image is ubuntu 16.04
+<br>
 **nginx_ubuntu**: Web server is NGINX. base image is php-fpm which is based on ubuntu
 
 * * *
