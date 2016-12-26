@@ -17,8 +17,12 @@ Docker Compose files located in ".docker" folder. if you want to change location
 <br>
 remeber to make changes in conf files too. (e.g. docker-compose.yml)
 
-You can rename ".docker" folder but "public_html" have been hardcoded in "nginx" configuration file
-<br>
+You can rename ".docker" folder but "public_html" have been hardcoded in "nginx" & "apache" configuration file
+<br><br>
 I tried to comment on every file to make it clear what is the usage of those files
+<br><br>
+Some of extenstions with thier dependecies included
+<br><br>
+**TODO:** I will add more type of web servers. e.g. alpine variant
 <br>
-Some of extenstions with thier dependecies included (only for debian-based image)
+if you encounter any problem, open issue
