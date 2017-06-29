@@ -1,3 +1,4 @@
 # Mysql custome config file
-# uncomment this if you get error
+# uncomment these lines if you get error
+#[mysqld]
 #sql-mode=""
