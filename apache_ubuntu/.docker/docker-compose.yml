@@ -1,25 +1,24 @@
-version: '2'
+version: '3'
 services:
   web:
-    # Apache & php WebServer.
     build:
-      context: ./Dockerfiles
+      context: ./
       args:
-        # PHP version. ONLY use '7.0' or '7.1'
-        - VERSION=7.1
-      dockerfile: docker.sample
-    # Change image directive based on your needs
-    image: amp:sample
+        VERSION: $PHP_VERSION
+        HOSTNAME: $HOSTNAME
+      dockerfile: docker.dockerfile
+    environment:
+      XDEBUG_HOST: ${XDEBUG_HOST}
+    image: $PROJECT_NAME:$PROJECT_VERSION
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
-    # connection to databases. Postgresql and Mysql are available. anything else should work
+      - "$WEB_EXPOSED_PORT:80"
+      - "$WEB_EXPOSED_PORT2:443"
     links:
       - mysql
       - psql
     volumes:
-      # App Code. Same as PHP Container
+      # App Code
       - ../:/code
       # Apache main Conf
       - ./server.conf:/etc/apache2/sites-available/000-default.conf
@@ -27,36 +26,33 @@ services:
       - ./php.ini:/etc/php_config/apache2/conf.d/01-custom.ini
       # Persistent Log of Apache Server
       - ./LOG/apache2/:/var/log/apache2/
+      # APT sources.list
+      - ./sources.list:/etc/apt/sources.list
   psql:
-    # Postgresql Container.
-    image: postgres:latest
+    # Postgresql Container
+    image: postgres:$POSTGRES_VERSION
     volumes:
       # Persistent Data Volume
       - ./DB/postgresql:/var/lib/postgresql/data
     ports:
-      # To access database from HOST
-      - "5432:5432"
+      - "$POSTGRES_EXPOSED_PORT:5432"
     environment:
-      # Auth Information
-      - POSTGRES_PASSWORD=SomeText
-      - POSTGRES_USER=SomeText
-      - POSTGRES_DB=SomeText
-      # Data path. Good practice in case of multiple database instance
-      - PGDATA=/var/lib/postgresql/data/projectName
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data/$PROJECT_NAME
   mysql:
     # MySql Container.
-    image: mysql:latest
+    image: mysql:$MYSQL_VERSION
     volumes:
       # Persistent Data Volume
-      - ./DB/mysql/projectname:/var/lib/mysql
-      # Custom CNF file. remove if you don't have any cutomization
+      - ./DB/mysql/$PROJECT_NAME:/var/lib/mysql
+      # Custom CNF file.
       - ./mysql.cnf:/etc/mysql/conf.d/01-custom.cnf
     ports:
-      # To access database from HOST
-      - "3306:3306"
+      - "$MYSQL_EXPOSED_PORT:3306"
     environment:
-      # Auth Information
-      - MYSQL_ROOT_PASSWORD=SomeText
-      - MYSQL_DATABASE=SomeText
-      - MYSQL_USER=SomeText
-      - MYSQL_PASSWORD=SomeText
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
