@@ -52,4 +52,4 @@ HEALTHCHECK --interval=10s --timeout=3s --retries=6 \
     CMD curl -f http://localhost/ || exit 1
 
 # Run Webserver
-CMD /bin/bash -c 'sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php_config/mods-available/xdebug.ini ; /usr/sbin/apache2ctl -D FOREGROUND'
+CMD /bin/bash -c 'sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php_config/apache2/conf.d/01-custom.ini ; /usr/sbin/apache2ctl -D FOREGROUND'
