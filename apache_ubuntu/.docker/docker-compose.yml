@@ -3,7 +3,7 @@ services:
   web:
     # Apahce + PHP WebServer.
     build:
-      context: ./
+      context: ./DOCKER_FILE_CONTEXT
       args:
         VERSION: $PHP_VERSION
         HOSTNAME: $HOSTNAME
@@ -28,7 +28,7 @@ services:
       # Persistent Log of Apache Server
       - ./LOG/apache2/:/var/log/apache2/
       # APT sources.list
-      - ./sources.list:/etc/apt/sources.list
+      - ./DOCKER_FILE_CONTEXT/sources.list:/etc/apt/sources.list
   psql:
     # Postgresql Container
     image: postgres:$POSTGRES_VERSION
