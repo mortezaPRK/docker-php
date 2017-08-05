@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    # Apahce + PHP WebServer.
     build:
       context: ./
       args:
