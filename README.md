@@ -1,5 +1,7 @@
 **Simple PHP app using Docker compose**
 
+**UPDATED TO Compose V3**
+
 Using offical images from [Docker](https://www.docker.com)
 
 (NGINX PHP-FPM Mysql Postgresql) AND (APACHE PHP Mysql Postgresql)
@@ -21,6 +23,9 @@ You can rename ".docker" and "public_html", remember to change values in "nginx"
 <br><br>
 Some of extenstions with thier dependecies are included too
 <br><br>
+
+>   there is a `.env` file in `.docker` folder.__ALL__ of Configuration can be done in that file.
+
 **TODO:** I will add more type of web servers. e.g. alpine variant
 <br><br>
 **if you encounter any problem, open issue**
