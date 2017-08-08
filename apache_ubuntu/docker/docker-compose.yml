@@ -15,6 +15,7 @@ services:
     ports:
       - "${WEB_EXPOSED_PORT}80"
       - "${WEB_EXPOSED_PORT_SSL}443"
+      - "9001:9001"
     links:
       - mysql
       - psql
