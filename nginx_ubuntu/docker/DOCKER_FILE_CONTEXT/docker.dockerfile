@@ -24,4 +24,6 @@ RUN apt-get update && \
     pecl install xdebug-2.5.0 && docker-php-ext-enable xdebug && \
     rm -rf /var/lib/apt/lists/*
 
+EXPOSE 9000 9001
+
 CMD /bin/bash -c 'sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /usr/local/etc/php/conf.d/01-custom.ini ; /usr/local/bin/php-fpm'

@@ -45,7 +45,7 @@ RUN mkdir -p /code
 RUN ln -s /etc/php/$VERSION /etc/php_config
 
 # Expose Webserver ports
-EXPOSE 80 443
+EXPOSE 80 443 9001
 
 # Check apache health
 HEALTHCHECK --interval=10s --timeout=3s --retries=6 \

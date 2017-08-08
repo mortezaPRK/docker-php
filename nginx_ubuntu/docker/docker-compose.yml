@@ -28,6 +28,8 @@ services:
     image: $PROJECT_NAME:$PROJECT_VERSION
     environment:
       XDEBUG_HOST: ${XDEBUG_HOST}
+    ports:
+      - "9001:9001"
     volumes:
       # App Code. Same as Nginx Container
       - ../app/:/code
