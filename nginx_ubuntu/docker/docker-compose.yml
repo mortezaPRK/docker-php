@@ -13,11 +13,11 @@ services:
     restart: always
     volumes:
       # App Code. Same as PHP Container
-      - ../:/code
+      - ../app/:/code
       # Nginx main Conf.
       - ./server.conf:/etc/nginx/conf.d/default.conf
       # Persistent Log of Nginx Server
-      - ./LOG/nginx:/var/log/nginx
+      - ../log/nginx:/var/log/nginx
   php:
     # PHP Container. links to Database Containers.
     build:
@@ -30,17 +30,17 @@ services:
       XDEBUG_HOST: ${XDEBUG_HOST}
     volumes:
       # App Code. Same as Nginx Container
-      - ../:/code
+      - ../app/:/code
       # PHP config file
       - ./php.ini:/usr/local/etc/php/conf.d/01-custom.ini
       # Persistent Log of PHP-FPM
-      - ./LOG/nginx:/var/log/nginx
+      - ../log/nginx:/var/log/nginx
   psql:
     # Postgresql Container
     image: postgres:$POSTGRES_VERSION
     volumes:
       # Persistent Data Volume
-      - ./DB/postgresql:/var/lib/postgresql/data
+      - ../database/postgresql:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_EXPOSED_PORT}5432"
     environment:
@@ -53,7 +53,7 @@ services:
     image: mysql:$MYSQL_VERSION
     volumes:
       # Persistent Data Volume
-      - ./DB/mysql/$PROJECT_NAME:/var/lib/mysql
+      - ../database/mysql/$PROJECT_NAME:/var/lib/mysql
       # Custom CNF file.
       - ./mysql.cnf:/etc/mysql/conf.d/01-custom.cnf
     ports:
