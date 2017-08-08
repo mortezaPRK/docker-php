@@ -20,13 +20,13 @@ services:
       - psql
     volumes:
       # App Code
-      - ../:/code
+      - ../app/:/code
       # Apache main Conf
       - ./server.conf:/etc/apache2/sites-available/000-default.conf
       # PHP main Conf
       - ./php.ini:/etc/php_config/apache2/conf.d/01-custom.ini
       # Persistent Log of Apache Server
-      - ./LOG/apache2/:/var/log/apache2/
+      - ../log/apache2/:/var/log/apache2/
       # APT sources.list
       - ./DOCKER_FILE_CONTEXT/sources.list:/etc/apt/sources.list
   psql:
@@ -34,7 +34,7 @@ services:
     image: postgres:$POSTGRES_VERSION
     volumes:
       # Persistent Data Volume
-      - ./DB/postgresql:/var/lib/postgresql/data
+      - ../database/postgresql:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_EXPOSED_PORT}5432"
     environment:
@@ -47,7 +47,7 @@ services:
     image: mysql:$MYSQL_VERSION
     volumes:
       # Persistent Data Volume
-      - ./DB/mysql/$PROJECT_NAME:/var/lib/mysql
+      - ../database/mysql/$PROJECT_NAME:/var/lib/mysql
       # Custom CNF file.
       - ./mysql.cnf:/etc/mysql/conf.d/01-custom.cnf
     ports:
