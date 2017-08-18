@@ -19,3 +19,6 @@ deb http://security.ubuntu.com/ubuntu/ xenial-security main restricted universe 
 # Canonical Repo
 # deb http://archive.canonical.com/ubuntu xenial partner
 # deb-src http://archive.canonical.com/ubuntu xenial partner
+
+# PHP
+deb http://a.mortzvps/ondrej/php/ubuntu xenial main
