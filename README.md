@@ -7,25 +7,48 @@ Using offical images from [Docker](https://www.docker.com)
 (NGINX PHP-FPM Mysql Postgresql) AND (APACHE PHP Mysql Postgresql)
 * * *
 
-There are two type of servers. You can choose based on your needs.
+# Servers :
 
-**apache_ubuntu**: Web server is Apache. base image is ubuntu 16.04
-<br>
-**nginx_ubuntu**: Web server is NGINX. base image is php-fpm
+| Folder        | Server        | PHP           | Database       |
+| :------------ |:-------------:| :------------:| :-------------:|
+| apache_ubuntu | Apache2       | apache module | Mysql, Postgres|
+| nginx_ubuntu  | NGINX         | PHP FastCGI   | Mysql, Postgres|
 
-* * *
+<br />
 
-Compose files are located in ".docker" folder. if you want to change location of this folder
-<br>
-remeber to make changes in conf files too. (e.g. docker-compose.yml)
+#   Directory Structure:
 
-You can rename ".docker" and "public_html", remember to change values in "nginx" & "apache" configuration files
+ ### `docker`: contains docker-compose configuration files (Server, Mysql and PHP):
+1.  `docker\DOCKER_FILE_CONTEXT`: contains dockerfile for server (Apache or PHP-FPM)
+2.  `docker\.env`: contains variable for docker-compose file (php version, hostname, database user/pass, exposed ports)
+3.  `docker\MAIN.conf`: example of nginx reverse proxy config file. It should be in `http` contex of nginx configuration
+4.  `docker\php.ini`: PHP config file. with xdebug support
+5.  `docker\mysql.cnf`: Mysql config file
+6.  `docker\server.conf`: Apache or Nginx config file
+
+### `app`: This folder will be mounted on server. there `public_html` folder, which is accessible by public
+
+>   All files in `docker` folder have comments. read them before edit any file
+
+
+### `database`: these folder will created after running server. contains database data
+### `log`: these folder will created after running server. contains server log
+
+<br />
+
+__NOTE__
+>   `database` and `log` folder needs Linux like permisson to work. if you are using Windows or Mac OS,
+>   comment out mount points (`apache`: line 30,38,51 of docker-compose.yml | `nginx`: line 20,39,45,58 of docker-compose.yml)
+
+
+>   to modify hostname, change `.env` file.
+>   for nginx variant, you should change `server.conf` __too__
+
+**TODO:**
+1.  add more type of web servers. e.g. alpine
+2.  add more services. e.g. redis
+3.  add datavolume to support windows and Mac
+4.  add production example
+5.  docker swarm
 <br><br>
-Some of extenstions with thier dependecies are included too
-<br><br>
-
->   there is a `.env` file in `.docker` folder.__ALL__ of Configuration can be done in that file.
-
-**TODO:** I will add more type of web servers. e.g. alpine variant
-<br><br>
-**if you encounter any problem, open issue**
+**if you encounter any problem, open an issue**
