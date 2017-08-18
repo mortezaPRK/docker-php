@@ -4,7 +4,7 @@
 
 Using offical images from [Docker](https://www.docker.com)
 
-(NGINX PHP-FPM Mysql Postgresql) AND (APACHE PHP Mysql Postgresql)
+_With some PHP extension._
 * * *
 
 # Servers :
@@ -50,5 +50,6 @@ __NOTE__
 3.  add datavolume to support windows and Mac
 4.  add production example
 5.  docker swarm
+6.  add more php extension
 <br><br>
 **if you encounter any problem, open an issue**
