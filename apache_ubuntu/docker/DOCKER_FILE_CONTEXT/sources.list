@@ -21,4 +21,4 @@ deb http://security.ubuntu.com/ubuntu/ xenial-security main restricted universe 
 # deb-src http://archive.canonical.com/ubuntu xenial partner
 
 # PHP
-deb http://a.mortzvps/ondrej/php/ubuntu xenial main
+deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main
