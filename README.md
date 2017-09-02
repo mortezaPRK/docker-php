@@ -13,6 +13,7 @@ _With some PHP extension._
 | :------------ |:-------------:| :------------:| :-------------:|
 | apache_ubuntu | Apache2       | apache module | Mysql, Postgres|
 | nginx_ubuntu  | NGINX         | PHP FastCGI   | Mysql, Postgres|
+| nginx_alpine  | NGINX         | PHP FastCGI   | Mysql, Postgres|
 
 <br />
 
@@ -45,11 +46,9 @@ __NOTE__
 >   for nginx variant, you should change `server.conf` __too__
 
 **TODO:**
-1.  add more type of web servers. e.g. alpine
-2.  add more services. e.g. redis
-3.  add datavolume to support windows and Mac
-4.  add production example
-5.  docker swarm
-6.  add more php extension
+1.  add more services. e.g. redis
+2.  add datavolume to support windows and Mac
+3.  add production example
+4.  docker swarm
 <br><br>
 **if you encounter any problem, open an issue**

@@ -1,0 +1,51 @@
+version: '3'
+services:
+  nginx:
+    # Nginx WebServer. links to PHP Container.
+    image: nginx:$NGINX_VERSION
+    ports:
+      - "${NGINX_EXPOSED_PORT}80"
+      - "${NGINX_EXPOSED_PORT_SSL}443"
+    links:
+      - php
+      - psql
+    restart: always
+    volumes:
+      # App Code. Same as PHP Container
+      - ../app/:/code
+      # Nginx main Conf.
+      - ./server.conf:/etc/nginx/conf.d/default.conf
+      # Persistent Log of Nginx Server
+      - ../log/nginx:/var/log/nginx
+  php:
+    # PHP Container. links to Database Containers.
+    build:
+      context: ./DOCKER_FILE_CONTEXT
+      args:
+        VERSION: ${PHP_VERSION}
+      dockerfile: docker.dockerfile
+    image: $PROJECT_NAME:$PROJECT_VERSION
+    environment:
+      XDEBUG_HOST: ${XDEBUG_HOST}
+    ports:
+      - "9001:9001"
+    volumes:
+      # App Code. Same as Nginx Container
+      - ../app/:/code
+      # PHP config file
+      - ./php.ini:/usr/local/etc/php/conf.d/01-custom.ini
+      # Persistent Log of PHP-FPM
+      - ../log/nginx:/var/log/nginx
+  psql:
+    # Postgresql Container
+    image: postgres:$POSTGRES_VERSION
+    volumes:
+      # Persistent Data Volume
+      - ../database/postgresql:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_EXPOSED_PORT}5432"
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data/$PROJECT_NAME
