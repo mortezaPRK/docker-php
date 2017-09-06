@@ -46,6 +46,12 @@ __NOTE__
 >   to modify hostname, change `.env` file.
 >   for nginx variant, you should change `server.conf` __too__
 
+***
+
+__Before__ run any service, read `notice` in docker.dockerfile file.
+
+***
+
 **TODO:**
 1.  add more services. e.g. redis
 2.  add datavolume to support windows and Mac
