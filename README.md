@@ -13,7 +13,7 @@ _With some PHP extension._
 | :------------ |:-------------:| :------------:| :-------------:|
 | apache_ubuntu | Apache2       | apache module | Mysql, Postgres|
 | nginx_ubuntu  | NGINX         | PHP FastCGI   | Mysql, Postgres|
-| nginx_alpine  | NGINX         | PHP FastCGI   | Mysql, Postgres|
+| nginx_alpine  | NGINX         | PHP FastCGI   | Postgres       |
 
 <br />
 
@@ -27,7 +27,7 @@ _With some PHP extension._
 5.  `docker\mysql.cnf`: Mysql config file
 6.  `docker\server.conf`: Apache or Nginx config file
 
-### `app`: This folder will be mounted on server. there `public_html` folder, which is accessible by public
+### `app`: This folder will be mounted on server. the `public_html` folder is accessible by public
 
 >   All files in `docker` folder have comments. read them before edit any file
 
@@ -41,6 +41,7 @@ __NOTE__
 >   `database` and `log` folder needs Linux like permisson to work. if you are using Windows or Mac OS,
 >   comment out mount points (`apache`: line 30,38,51 of docker-compose.yml | `nginx`: line 20,39,45,58 of docker-compose.yml)
 
+>   There is no official Mysql for alpine version. so I did not include it in YAML file
 
 >   to modify hostname, change `.env` file.
 >   for nginx variant, you should change `server.conf` __too__
