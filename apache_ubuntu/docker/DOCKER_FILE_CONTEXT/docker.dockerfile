@@ -29,7 +29,14 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &&
         php$VERSION-cli \
         php$VERSION-xdebug \
         && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    EXPECTED_SIGNATURE=$(curl https://composer.github.io/installer.sig) && \
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+        ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');") && \
+        if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then >&2 echo 'ERROR: Invalid installer signature'; rm composer-setup.php exit 1; fi && \
+        php composer-setup.php --quiet && \
+        rm composer-setup.php && \
+        mv composer.phar /usr/local/bin/composer
 
 # Enable php modules e.g. mcrypt
 # RUN /usr/sbin/phpenmod mcrypt
