@@ -32,8 +32,8 @@ _With some PHP extension._
 >   All files in `docker` folder have comments. read them before edit any file
 
 
-### `database`: these folder will created after running server. contains database data
-### `log`: these folder will created after running server. contains server log
+### `database`: this folder will created after running server. contains database data
+### `log`: this folder will created after running server. contains server log
 
 <br />
 
