@@ -11,7 +11,8 @@ ARG HOSTNAME
 
 # Update and Install APACHE, PHP and PHP extensions.
 # PHP and extensions installed from PPA:ondrej/php
-# Be aware that some php extensions may NOT be available in all versions!
+
+# NOTICE: install all package with one apt-get command to avoide downloading and installing dependencies. Use one RUN directive to reduce image size. remove comments inside RUN
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -yq install \
@@ -30,6 +31,9 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &&
         php$VERSION-xdebug \
         && \
     rm -rf /var/lib/apt/lists/* && \
+    # Xdebug
+    echo "xdebug.remote_host=" >> /etc/php_config/apache2/conf.d/20-xdebug.ini && \
+    # Composer
     EXPECTED_SIGNATURE=$(curl https://composer.github.io/installer.sig) && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');") && \
@@ -39,26 +43,20 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &&
         mv composer.phar /usr/local/bin/composer
 
 # Enable php modules e.g. mcrypt
-# RUN /usr/sbin/phpenmod mcrypt
+RUN /usr/sbin/phpenmod mcrypt
 
 # Allow .htaccess file to get parsed by apache
 RUN echo "ServerName $HOSTNAME" >> /etc/apache2/apache2.conf && sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf && a2enmod rewrite
 
-# Configure /code folder with sample app
-RUN mkdir -p /code
-
 # Configure /etc/php/PHPVERSION to /etc/php_config
 RUN ln -s /etc/php/$VERSION /etc/php_config
-
-# Xdebug
-RUN echo "xdebug.remote_host=" >> /etc/php_config/apache2/conf.d/20-xdebug.ini
 
 # Expose Webserver ports
 EXPOSE 80 443 9001
 
 # Check apache health
 HEALTHCHECK --interval=10s --timeout=3s --retries=6 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD curl -f http://$HOSTNAME/ || exit 1
 
 # Run Webserver
-CMD /bin/bash -c 'sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php_config/apache2/conf.d/20-xdebug.ini ; /usr/sbin/apache2ctl -D FOREGROUND'
+CMD exec /bin/bash -c 'sed -i "s/xdebug\.remote_host\=.*/xdebug\.remote_host\=$XDEBUG_HOST/g" /etc/php_config/apache2/conf.d/20-xdebug.ini && exec /usr/sbin/apache2ctl -D FOREGROUND'
