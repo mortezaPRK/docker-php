@@ -1,6 +1,6 @@
-ARG VERSION
+ARG PHP_VERSION
 
-FROM php:$VERSION-fpm-alpine
+FROM php:${PHP_VERSION}-fpm-alpine
 
 COPY usermod /usermod
 # NOTICE: install all package with one apk command to avoide downloading and installing dependencies. Use one RUN directive to reduce image size. remove comments inside RUN
