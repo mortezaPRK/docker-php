@@ -27,7 +27,7 @@ services:
     build:
       context: ./DOCKER_FILE_CONTEXT
       args:
-        VERSION: ${PHP_VERSION}
+        PHP_VERSION: ${PHP_VERSION}
       dockerfile: docker.dockerfile
     image: $PROJECT_NAME:$PROJECT_VERSION
     environment:
