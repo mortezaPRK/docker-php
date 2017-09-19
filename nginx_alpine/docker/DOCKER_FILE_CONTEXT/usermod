@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#   USER    $1
+#   GROUP   $2
+#   UID     $3
+#   GID     $4
+#   OUID    $5
+#   OGID    $6
+deluser $1
+addgroup -g $4 $2
+adduser -u $3 -G $2 -g 'Linux User named' -s /sbin/nologin -D $1
+find / -user $5 -exec chown $1 {} \;
+find / -group $6 -exec chgrp $2 {} \;

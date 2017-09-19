@@ -2,6 +2,7 @@ ARG VERSION
 
 FROM php:$VERSION-fpm-alpine
 
+COPY usermod /usermod
 # NOTICE: install all package with one apk command to avoide downloading and installing dependencies. Use one RUN directive to reduce image size. remove comments inside RUN
 RUN apk upgrade --update && \
         # Curl
@@ -43,7 +44,12 @@ RUN apk upgrade --update && \
             if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then >&2 echo 'ERROR: Invalid installer signature'; rm composer-setup.php exit 1; fi && \
             php composer-setup.php --quiet && \
             rm composer-setup.php && \
-            mv composer.phar /usr/local/bin/composer
+            mv composer.phar /usr/local/bin/composer && \
+        # change uid and gid of php-fpm proccess
+        chmod +x /usermod && \
+            /usermod xfs xfs 32 32 33 33 && \
+            /usermod www-data www-data 33 33 82 82 && \
+        rm /usermod
 
 # Expose NGINX and XDEBUG
 EXPOSE 9000 9001
