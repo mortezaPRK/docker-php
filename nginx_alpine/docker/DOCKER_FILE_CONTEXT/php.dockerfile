@@ -46,7 +46,7 @@ RUN apk upgrade --update && \
             rm composer-setup.php && \
             mv composer.phar /usr/local/bin/composer && \
         # change uid and gid of php-fpm proccess
-        chmod +x /usermod && \
+        chmod +x /usermod && sleep 1 && sync && \
             /usermod xfs xfs 32 32 33 33 && \
             /usermod www-data www-data 33 33 82 82 && \
         rm /usermod
